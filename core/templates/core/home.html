@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bg-amber-100 rounded-xl p-8 mb-8">
+  <h1 class="text-3xl font-bold mb-2">{{ BUSINESS.name }}</h1>
+  <p class="text-lg mb-4">{{ BUSINESS.tagline }}</p>
+  <a href="{% url 'contact' %}" class="bg-amber-800 text-white px-5 py-2 rounded">Get today's quote</a>
+  <a href="{% url 'signup' %}" class="ml-2 border border-amber-800 px-5 py-2 rounded">Factory login / register</a>
+</section>
+
+<section class="grid md:grid-cols-3 gap-4 mb-8">
+  <div class="bg-white p-5 rounded shadow"><h3 class="font-semibold mb-1">Direct from UP</h3><p>Regular truckloads of wood blocks from trusted suppliers.</p></div>
+  <div class="bg-white p-5 rounded shadow"><h3 class="font-semibold mb-1">Honest weighment</h3><p>Every truck weighed at kanta; slip and weight visible in your login.</p></div>
+  <div class="bg-white p-5 rounded shadow"><h3 class="font-semibold mb-1">Track your truck</h3><p>See which trucks are on the way and when they arrive.</p></div>
+</section>
+
+<section>
+  <h2 class="text-2xl font-semibold mb-3">Today's rates</h2>
+  <div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="bg-stone-100"><tr><th class="p-3">Wood</th><th class="p-3">Rate / quintal</th><th class="p-3">Updated</th></tr></thead>
+      {% for r in rates %}
+      <tr class="border-t"><td class="p-3">{{ r.wood_type }}</td><td class="p-3">₹ {{ r.rate_per_quintal }}</td><td class="p-3">{{ r.updated_on }}</td></tr>
+      {% empty %}<tr><td class="p-3" colspan="3">Call us for current rates.</td></tr>{% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

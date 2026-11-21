@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Contact us</h1>
+<form method="post" class="bg-white p-5 rounded shadow max-w-lg space-y-3">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="bg-amber-800 text-white px-5 py-2 rounded">Send enquiry</button>
+</form>
+{% endblock %}

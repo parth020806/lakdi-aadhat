@@ -1,0 +1,12 @@
+<div class="bg-white rounded shadow overflow-x-auto mb-6">
+<table class="w-full text-left text-sm">
+  <thead class="bg-stone-100"><tr><th class="p-2">Truck</th><th class="p-2">Buyer</th><th class="p-2">Wood</th><th class="p-2">Status</th><th class="p-2">Expected</th><th class="p-2">Net (kg)</th></tr></thead>
+  {% for c in rows %}
+  <tr class="border-t">
+    <td class="p-2"><a class="text-amber-800 underline" href="{% url 'consignment_detail' c.pk %}">{{ c.truck }}</a></td>
+    <td class="p-2">{{ c.buyer.name }}</td><td class="p-2">{{ c.wood_type }}</td>
+    <td class="p-2">{{ c.get_status_display }}</td><td class="p-2">{{ c.expected_arrival|default:"-" }}</td>
+    <td class="p-2">{{ c.net_weight_kg }}</td>
+  </tr>
+  {% empty %}<tr><td class="p-2 text-stone-500" colspan="6">Nothing here.</td></tr>{% endfor %}
+</table></div>

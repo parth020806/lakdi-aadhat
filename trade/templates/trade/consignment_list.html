@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-3">All trucks</h1>
+<div class="mb-3 flex flex-wrap gap-2 text-sm">
+  <a class="underline" href="{% url 'consignment_list' %}">All</a>
+  {% for val, label in status_choices %}<a class="underline" href="?status={{ val }}">{{ label }}</a>{% endfor %}
+</div>
+{% include "trade/_trucks_table.html" with rows=consignments %}
+{% endblock %}

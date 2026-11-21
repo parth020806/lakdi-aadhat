@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex flex-wrap items-center gap-3 mb-4">
+  <h1 class="text-2xl font-semibold flex-1">Dashboard</h1>
+  {% if user.profile.is_internal %}
+    <a href="{% url 'consignment_create' %}" class="bg-amber-800 text-white px-4 py-2 rounded">+ Add truck</a>
+    <a href="{% url 'payment_create' %}" class="border border-amber-800 px-4 py-2 rounded">+ Payment</a>
+    <a href="{% url 'admin:index' %}" class="border px-4 py-2 rounded">Admin</a>
+  {% elif my_party %}
+    <a href="{% url 'ledger' my_party.pk %}" class="bg-amber-800 text-white px-4 py-2 rounded">My ledger</a>
+  {% endif %}
+</div>
+
+<h2 class="font-semibold mb-2">On the way</h2>
+{% include "trade/_trucks_table.html" with rows=on_the_way %}
+<h2 class="font-semibold mb-2">Arrived (to unload / weigh)</h2>
+{% include "trade/_trucks_table.html" with rows=arrived %}
+<h2 class="font-semibold mb-2">Recently unloaded</h2>
+{% include "trade/_trucks_table.html" with rows=recent %}
+
+{% if parties_due %}
+<h2 class="font-semibold mb-2">Outstanding by buyer</h2>
+<div class="bg-white rounded shadow overflow-x-auto">
+<table class="w-full text-left text-sm">
+  <thead class="bg-stone-100"><tr><th class="p-2">Buyer</th><th class="p-2">Billed</th><th class="p-2">Paid</th><th class="p-2">Due</th></tr></thead>
+  {% for p in parties_due %}
+  <tr class="border-t"><td class="p-2"><a class="underline" href="{% url 'ledger' p.pk %}">{{ p.name }}</a></td>
+    <td class="p-2">₹ {{ p.total_billed }}</td><td class="p-2">₹ {{ p.total_paid }}</td><td class="p-2 font-semibold">₹ {{ p.outstanding }}</td></tr>
+  {% endfor %}
+</table></div>
+{% endif %}
+{% endblock %}

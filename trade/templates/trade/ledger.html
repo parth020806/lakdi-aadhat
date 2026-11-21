@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-1">Ledger: {{ party.name }}</h1>
+<p class="mb-4">Billed ₹ {{ party.total_billed }} · Paid ₹ {{ party.total_paid }} · <b>Due ₹ {{ party.outstanding }}</b></p>
+
+<h2 class="font-semibold mb-2">Trucks / bills</h2>
+<div class="bg-white rounded shadow overflow-x-auto mb-6">
+<table class="w-full text-left text-sm">
+  <thead class="bg-stone-100"><tr><th class="p-2">Truck</th><th class="p-2">Net (qtl)</th><th class="p-2">Rate</th><th class="p-2">Amount</th></tr></thead>
+  {% for c in consignments %}
+  <tr class="border-t"><td class="p-2"><a class="underline" href="{% url 'consignment_detail' c.pk %}">{{ c.truck }}</a></td>
+    <td class="p-2">{{ c.net_quintal|floatformat:2 }}</td><td class="p-2">₹ {{ c.rate_per_quintal }}</td><td class="p-2">₹ {{ c.amount }}</td></tr>
+  {% endfor %}
+</table></div>
+
+<h2 class="font-semibold mb-2">Payments</h2>
+<div class="bg-white rounded shadow overflow-x-auto">
+<table class="w-full text-left text-sm">
+  <thead class="bg-stone-100"><tr><th class="p-2">Date</th><th class="p-2">Mode</th><th class="p-2">Ref</th><th class="p-2">Amount</th></tr></thead>
+  {% for p in payments %}
+  <tr class="border-t"><td class="p-2">{{ p.date }}</td><td class="p-2">{{ p.get_mode_display }}</td><td class="p-2">{{ p.reference }}</td><td class="p-2">₹ {{ p.amount }}</td></tr>
+  {% endfor %}
+</table></div>
+{% endblock %}

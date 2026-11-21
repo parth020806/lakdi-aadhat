@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="{% url 'dashboard' %}" class="text-sm underline">← Back</a>
+<h1 class="text-2xl font-semibold my-3">Truck {{ c.truck }}</h1>
+<div class="grid md:grid-cols-2 gap-4 mb-6">
+  <div class="bg-white p-4 rounded shadow space-y-1">
+    <p><b>Buyer:</b> {{ c.buyer.name }}</p>
+    <p><b>Supplier:</b> {{ c.supplier.name|default:"-" }} ({{ c.origin|default:"-" }})</p>
+    <p><b>Wood:</b> {{ c.wood_type }}</p>
+    <p><b>Driver:</b> {{ c.truck.driver_name|default:"-" }} {{ c.truck.driver_phone }}</p>
+    <p><b>Dispatched:</b> {{ c.dispatched_on|default:"-" }} · <b>Expected:</b> {{ c.expected_arrival|default:"-" }}</p>
+    <p><b>Status:</b> <span class="bg-amber-100 px-2 rounded">{{ c.get_status_display }}</span></p>
+  </div>
+  <div class="bg-white p-4 rounded shadow space-y-1">
+    <p><b>Net weight:</b> {{ c.net_weight_kg }} kg ({{ c.net_quintal|floatformat:2 }} qtl)</p>
+    <p><b>Rate:</b> ₹ {{ c.rate_per_quintal }} / qtl</p>
+    <p class="text-xl"><b>Amount:</b> ₹ {{ c.amount }}</p>
+    <p><b>Paid against this truck:</b> ₹ {{ c.paid }}</p>
+  </div>
+</div>
+
+<h2 class="font-semibold mb-2">Weighments</h2>
+<div class="bg-white rounded shadow overflow-x-auto mb-4">
+<table class="w-full text-left text-sm">
+  <thead class="bg-stone-100"><tr><th class="p-2">Time</th><th class="p-2">Gross</th><th class="p-2">Tare</th><th class="p-2">Net</th><th class="p-2">Slip</th></tr></thead>
+  {% for w in c.weighments.all %}
+  <tr class="border-t"><td class="p-2">{{ w.recorded_at }}</td><td class="p-2">{{ w.gross_kg }}</td><td class="p-2">{{ w.tare_kg }}</td>
+    <td class="p-2 font-semibold">{{ w.net_kg }}</td>
+    <td class="p-2">{% if w.slip_photo %}<a class="underline" href="{{ w.slip_photo.url }}">View</a>{% endif %}</td></tr>
+  {% empty %}<tr><td class="p-2 text-stone-500" colspan="5">Not weighed yet.</td></tr>{% endfor %}
+</table></div>
+
+{% if user.profile.is_internal %}
+<div class="grid md:grid-cols-2 gap-4">
+  <form method="post" action="{% url 'add_weighment' c.pk %}" enctype="multipart/form-data" class="bg-white p-4 rounded shadow space-y-2">
+    {% csrf_token %}<h3 class="font-semibold">Add weighment</h3>{{ weighment_form.as_p }}
+    <button class="bg-amber-800 text-white px-4 py-2 rounded">Save weight</button>
+  </form>
+  <form method="post" action="{% url 'update_status' c.pk %}" class="bg-white p-4 rounded shadow space-y-2">
+    {% csrf_token %}<h3 class="font-semibold">Update status</h3>{{ status_form.as_p }}
+    <button class="bg-amber-800 text-white px-4 py-2 rounded">Update</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
